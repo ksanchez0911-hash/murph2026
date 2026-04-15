@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree House Memorial Day Murph 2026</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f4f0; color: #1a1a1a; }
+    .app { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    .header { text-align: center; padding: 2rem 0 1.25rem; border-bottom: 1px solid #e0dfd8; margin-bottom: 1.5rem; }
+    .header-badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #b03030; border: 1px solid #b03030; border-radius: 6px; padding: 3px 10px; margin-bottom: 12px; text-transform: uppercase; }
+    .header h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; line-height: 1.2; }
+    .header p { font-size: 14px; color: #666; margin-top: 6px; }
+    .info-card { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 14px; color: #555; line-height: 1.6; }
+    .info-card strong { color: #1a1a1a; font-weight: 600; }
+    .section-label { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    @media (max-width: 480px) { .slots-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: 1fr !important; } }
+    .slot-card { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+    .slot-card:hover:not(.full):not(.selected) { border-color: #aaa; }
+    .slot-card.selected { border: 2px solid #1a5fa8; box-shadow: 0 0 0 3px rgba(26,95,168,0.1); }
+    .slot-card.full { opacity: 0.5; cursor: not-allowed; }
+    .slot-time { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .slot-avail { font-size: 13px; margin-top: 4px; }
+    .slot-avail.open { color: #2a7a3b; }
+    .slot-avail.low { color: #b06000; }
+    .slot-avail.gone { color: #b03030; }
+    .slot-bar { height: 4px; border-radius: 2px; background: #eee; margin-top: 10px; overflow: hidden; }
+    .slot-bar-fill { height: 100%; border-radius: 2px; background: #1a5fa8; transition: width 0.3s; }
+    .slot-bar-fill.low { background: #e08800; }
+    .slot-bar-fill.danger { background: #c03030; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
+    .form-group label span { color: #b03030; }
+    input[type=text], input[type=email], input[type=tel], input[type=password], textarea {
+      width: 100%; padding: 10px 12px; font-size: 14px; font-family: inherit;
+      border: 1px solid #ccc; border-radius: 8px; background: #fff; color: #1a1a1a;
+      outline: none; transition: border-color 0.15s;
+    }
+    input:focus, textarea:focus { border-color: #1a5fa8; box-shadow: 0 0 0 3px rgba(26,95,168,0.1); }
+    textarea { resize: vertical; min-height: 80px; }
+    .error-msg { font-size: 13px; color: #b03030; margin-bottom: 1rem; padding: 10px 12px; background: #fdf0f0; border: 1px solid #f5c0c0; border-radius: 8px; }
+    .btn { width: 100%; padding: 12px; font-size: 15px; font-weight: 600; color: #fff; background: #1a3a6a; border: none; border-radius: 10px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+    .btn:hover { background: #142f58; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .success-card { text-align: center; background: #f0faf3; border: 1px solid #a0dbb0; border-radius: 12px; padding: 2.5rem 2rem; }
+    .success-icon { font-size: 40px; margin-bottom: 12px; }
+    .success-card h2 { font-size: 22px; font-weight: 600; color: #1f6b35; margin-bottom: 8px; }
+    .success-card p { font-size: 14px; color: #555; margin-top: 6px; }
+    .admin-toggle { text-align: center; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #e0dfd8; }
+    .admin-toggle button { font-size: 12px; color: #aaa; background: none; border: none; cursor: pointer; }
+    .admin-toggle button:hover { color: #666; }
+    .admin-section { margin-top: 1.5rem; }
+    .admin-login { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .admin-login input { flex: 1; }
+    .admin-login .btn { width: auto; padding: 10px 20px; font-size: 13px; }
+    .admin-slot { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+    .admin-slot-header { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    .admin-slot-count { font-size: 13px; font-weight: 400; color: #888; }
+    .admin-row { display: grid; grid-template-columns: 1.2fr 1fr 1.4fr; gap: 8px; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #f5f5f5; color: #444; }
+    .admin-row:last-child { border-bottom: none; }
+    .admin-row.header { font-weight: 600; color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 8px; }
+    .admin-empty { font-size: 13px; color: #bbb; font-style: italic; padding: 4px 0; }
+    .export-btn { background: #fff; color: #1a3a6a; border: 1px solid #1a3a6a; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; width: auto; transition: background 0.15s; }
+    .export-btn:hover { background: #f0f4fa; }
+    .admin-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .refresh-btn { background: none; border: 1px solid #ccc; border-radius: 8px; padding: 6px 12px; font-size: 12px; color: #666; cursor: pointer; font-family: inherit; }
+    .refresh-btn:hover { background: #f5f5f5; }
+    .loading { text-align: center; padding: 4rem; color: #888; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState, useEffect, useCallback } = React;
+
+const SLOTS = [
+  { id: 0, label: "8:00 AM – 9:30 AM" },
+  { id: 1, label: "10:00 AM – 11:30 AM" },
+  { id: 2, label: "12:00 PM – 1:30 PM" },
+  { id: 3, label: "2:00 PM – 3:30 PM" },
+];
+const MAX = 16;
+const STORAGE_KEY = "murph2026_v1";
+const ADMIN_PASS = "Murph2026";
+
+// --- Firebase Realtime Database (free tier) is used for persistence.
+// Replace FIREBASE_URL below with your own Firebase project URL.
+// Instructions: https://firebase.google.com/docs/database/web/start
+// Set database rules to public read/write during the event:
+// { "rules": { ".read": true, ".write": true } }
+const FIREBASE_URL = "https://console.firebase.google.com/u/1/project/treehouse-murph/database/treehouse-murph-default-rtdb/data/~2F";
+
+async function fbGet() {
+  try {
+    const r = await fetch(FIREBASE_URL + "/registrations.json");
+    const data = await r.json();
+    if (!data) return { 0: [], 1: [], 2: [], 3: [] };
+    // Firebase stores arrays as objects with numeric keys
+    const result = { 0: [], 1: [], 2: [], 3: [] };
+    [0,1,2,3].forEach(id => {
+      if (data[id]) {
+        result[id] = Array.isArray(data[id]) ? data[id].filter(Boolean) : Object.values(data[id]).filter(Boolean);
+      }
+    });
+    return result;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fbSet(data) {
+  try {
+    await fetch(FIREBASE_URL + "/registrations.json", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function App() {
+  const [regs, setRegs] = useState({ 0: [], 1: [], 2: [], 3: [] });
+  const [loading, setLoading] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ first: "", last: "", phone: "", email: "", slot: null, comments: "" });
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [adminPass, setAdminPass] = useState("");
+  const [adminAuthed, setAdminAuthed] = useState(false);
+  const [adminErr, setAdminErr] = useState("");
+  const [submittedName, setSubmittedName] = useState("");
+  const [submittedSlot, setSubmittedSlot] = useState("");
+  const [fbError, setFbError] = useState(false);
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    const data = await fbGet();
+    if (data === null) {
+      setFbError(true);
+    } else {
+      setRegs(data);
+      setFbError(false);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  const slotCount = (id) => (regs[id] || []).length;
+  const slotFull = (id) => slotCount(id) >= MAX;
+  const slotAvail = (id) => MAX - slotCount(id);
+  const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleSubmit = async () => {
+    if (!form.first.trim() || !form.last.trim() || !form.phone.trim() || !form.email.trim() || form.slot === null) {
+      setError("Please fill out all required fields and select a time slot.");
+      return;
+    }
+    setSubmitting(true);
+    setError("");
+    const current = await fbGet();
+    if (!current) { setError("Connection error — please try again."); setSubmitting(false); return; }
+    if ((current[form.slot] || []).length >= MAX) {
+      setError("That slot just filled up — please select another.");
+      setRegs(current);
+      setSubmitting(false);
+      return;
+    }
+    const newReg = { first: form.first.trim(), last: form.last.trim(), phone: form.phone.trim(), email: form.email.trim(), comments: form.comments.trim(), ts: new Date().toISOString() };
+    const updated = { ...current, [form.slot]: [...(current[form.slot] || []), newReg] };
+    const ok = await fbSet(updated);
+    if (!ok) { setError("Save failed — please try again."); setSubmitting(false); return; }
+    setRegs(updated);
+    setSubmittedName(form.first + " " + form.last);
+    setSubmittedSlot(SLOTS[form.slot].label);
+    setSubmitted(true);
+    setSubmitting(false);
+  };
+
+  const adminLogin = () => {
+    if (adminPass === ADMIN_PASS) { setAdminAuthed(true); setAdminErr(""); loadData(); }
+    else setAdminErr("Incorrect password.");
+  };
+
+  const exportCSV = () => {
+    let rows = ["Time Slot,First Name,Last Name,Phone,Email,Comments,Registered At"];
+    SLOTS.forEach(s => {
+      (regs[s.id] || []).forEach(r => {
+        rows.push(['"'+s.label+'"', r.first, r.last, r.phone, r.email, '"'+(r.comments||"").replace(/"/g,'""')+'"', r.ts].join(","));
+      });
+    });
+    const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = "murph2026_registrations.csv"; a.click();
+  };
+
+  const barClass = (id) => {
+    const pct = slotCount(id) / MAX;
+    if (pct >= 1) return "danger";
+    if (pct >= 0.75) return "low";
+    return "";
+  };
+
+  const availClass = (id) => {
+    const pct = slotCount(id) / MAX;
+    if (pct >= 1) return "gone";
+    if (pct >= 0.75) return "low";
+    return "open";
+  };
+
+  if (loading) return React.createElement("div", { className: "loading" }, "Loading...");
+
+  return React.createElement("div", { className: "app" },
+    React.createElement("div", { className: "header" },
+      React.createElement("div", { className: "header-badge" }, "Memorial Day 2026"),
+      React.createElement("h1", null, "Tree House Murph"),
+      React.createElement("p", null, "May 25th, 2026 · 1118 N. Fourth St., Wilmington, NC 28401")
+    ),
+
+    fbError && React.createElement("div", { className: "error-msg" }, "⚠ Database not configured yet. See setup instructions in the README."),
+
+    React.createElement("div", { className: "info-card" },
+      React.createElement("strong", null, "Free community event. "),
+      "Registration is first come, first served. Select a time slot below and fill out your information. Space is limited to 16 participants per slot."
+    ),
+
+    submitted
+      ? React.createElement("div", { className: "success-card" },
+          React.createElement("div", { className: "success-icon" }, "✓"),
+          React.createElement("h2", null, "You're registered!"),
+          React.createElement("p", null, submittedName + " is confirmed for the " + submittedSlot + " slot."),
+          React.createElement("p", { style: { marginTop: "8px" } }, "See you on Memorial Day. Semper Fi.")
+        )
+      : React.createElement("div", null,
+          React.createElement("div", { className: "section-label" }, "Pick a time slot"),
+          React.createElement("div", { className: "slots-grid" },
+            SLOTS.map(s => {
+              const full = slotFull(s.id);
+              const selected = form.slot === s.id;
+              const pct = slotCount(s.id) / MAX;
+              return React.createElement("div", {
+                key: s.id,
+                className: "slot-card" + (selected ? " selected" : "") + (full ? " full" : ""),
+                onClick: () => !full && setField("slot", s.id)
+              },
+                React.createElement("div", { className: "slot-time" }, s.label),
+                React.createElement("div", { className: "slot-avail " + availClass(s.id) },
+                  full ? "Full — no spots remaining" : slotAvail(s.id) + " of " + MAX + " spots left"
+                ),
+                React.createElement("div", { className: "slot-bar" },
+                  React.createElement("div", { className: "slot-bar-fill " + barClass(s.id), style: { width: Math.round(pct * 100) + "%" } })
+                )
+              );
+            })
+          ),
+
+          React.createElement("div", { className: "section-label" }, "Your information"),
+          React.createElement("div", { className: "form-grid" },
+            React.createElement("div", { className: "form-group" },
+              React.createElement("label", null, "First name ", React.createElement("span", null, "*")),
+              React.createElement("input", { type: "text", value: form.first, onChange: e => setField("first", e.target.value), placeholder: "First" })
+            ),
+            React.createElement("div", { className: "form-group" },
+              React.createElement("label", null, "Last name ", React.createElement("span", null, "*")),
+              React.createElement("input", { type: "text", value: form.last, onChange: e => setField("last", e.target.value), placeholder: "Last" })
+            )
+          ),
+          React.createElement("div", { className: "form-group" },
+            React.createElement("label", null, "Phone number ", React.createElement("span", null, "*")),
+            React.createElement("input", { type: "tel", value: form.phone, onChange: e => setField("phone", e.target.value), placeholder: "(910) 000-0000" })
+          ),
+          React.createElement("div", { className: "form-group" },
+            React.createElement("label", null, "Email address ", React.createElement("span", null, "*")),
+            React.createElement("input", { type: "email", value: form.email, onChange: e => setField("email", e.target.value), placeholder: "example@example.com" })
+          ),
+          React.createElement("div", { className: "form-group" },
+            React.createElement("label", null, "Additional comments or special requests"),
+            React.createElement("textarea", { value: form.comments, onChange: e => setField("comments", e.target.value), placeholder: "Anything we should know..." })
+          ),
+
+          error && React.createElement("div", { className: "error-msg" }, error),
+          React.createElement("button", { className: "btn", onClick: handleSubmit, disabled: submitting || fbError },
+            submitting ? "Registering..." : "Register for the Murph →"
+          )
+        ),
+
+    React.createElement("div", { className: "admin-toggle" },
+      React.createElement("button", { onClick: () => setShowAdmin(!showAdmin) }, showAdmin ? "Hide admin" : "Admin access")
+    ),
+
+    showAdmin && React.createElement("div", { className: "admin-section" },
+      !adminAuthed
+        ? React.createElement("div", null,
+            React.createElement("div", { className: "admin-login" },
+              React.createElement("input", { type: "password", value: adminPass, onChange: e => setAdminPass(e.target.value), placeholder: "Admin password", onKeyDown: e => e.key === "Enter" && adminLogin() }),
+              React.createElement("button", { className: "btn", onClick: adminLogin }, "Unlock")
+            ),
+            adminErr && React.createElement("div", { className: "error-msg" }, adminErr)
+          )
+        : React.createElement("div", null,
+            React.createElement("div", { className: "admin-header-row" },
+              React.createElement("div", { className: "section-label", style: { margin: 0 } }, "All registrations"),
+              React.createElement("div", { style: { display: "flex", gap: "8px" } },
+                React.createElement("button", { className: "refresh-btn", onClick: loadData }, "Refresh"),
+                React.createElement("button", { className: "export-btn", onClick: exportCSV }, "Export CSV")
+              )
+            ),
+            SLOTS.map(s =>
+              React.createElement("div", { key: s.id, className: "admin-slot" },
+                React.createElement("div", { className: "admin-slot-header" },
+                  s.label,
+                  React.createElement("span", { className: "admin-slot-count" }, slotCount(s.id) + " / " + MAX + " registered")
+                ),
+                (regs[s.id] || []).length === 0
+                  ? React.createElement("div", { className: "admin-empty" }, "No registrations yet")
+                  : React.createElement("div", null,
+                      React.createElement("div", { className: "admin-row header" },
+                        React.createElement("span", null, "Name"),
+                        React.createElement("span", null, "Phone"),
+                        React.createElement("span", null, "Email")
+                      ),
+                      (regs[s.id] || []).map((r, i) =>
+                        React.createElement("div", { key: i, className: "admin-row" },
+                          React.createElement("span", null, r.first + " " + r.last),
+                          React.createElement("span", null, r.phone),
+                          React.createElement("span", null, r.email)
+                        )
+                      )
+                    )
+              )
+            )
+          )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
